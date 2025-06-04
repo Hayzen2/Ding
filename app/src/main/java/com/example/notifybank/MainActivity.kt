@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.notifybank.ui.theme.NotifyBankTheme
 import java.util.Locale
+import androidx.core.content.edit
 
 
 class MainActivity : ComponentActivity() {
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
         startService(serviceIntent)
         textToSpeech = TextToSpeech(applicationContext) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                textToSpeech.setLanguage(Locale("vi", "VN"))
+                textToSpeech.language = Locale("vi", "VN")
             }
         }
         // Check if notification access is granted
@@ -105,7 +106,7 @@ class MainActivity : ComponentActivity() {
         val soundVolume = remember { mutableFloatStateOf(0.5f) }
 
         LaunchedEffect(Unit) {
-            val prefs = context.getSharedPreferences("bank_preferences", Context.MODE_PRIVATE)
+            val prefs = context.getSharedPreferences("bank_preferences", MODE_PRIVATE)
             isOCBEnabled.value = prefs.getBoolean("OCB_enabled", true)
             isTechEnabled.value = prefs.getBoolean("Techcombank_enabled", true)
             isVietinEnabled.value = prefs.getBoolean("Vietinbank_enabled", true)
@@ -274,8 +275,8 @@ class MainActivity : ComponentActivity() {
 
     private fun setSoundVolume(context: Context, volume: Float){
         val sharedPreferences =
-            context.getSharedPreferences("bank_preferences", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putFloat("sound_volume", volume).apply()
+            context.getSharedPreferences("bank_preferences", MODE_PRIVATE)
+        sharedPreferences.edit { putFloat("sound_volume", volume) }
     }
 
     private fun playTestSound(volume: Float){
@@ -295,7 +296,7 @@ class MainActivity : ComponentActivity() {
 
     private fun saveBankState(context: Context, bank: String, isEnabled: Boolean) {
         val sharedPreferences =
-            context.getSharedPreferences("bank_preferences", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putBoolean("${bank}_enabled", isEnabled).apply()
+            context.getSharedPreferences("bank_preferences", MODE_PRIVATE)
+        sharedPreferences.edit { putBoolean("${bank}_enabled", isEnabled) }
     }
 }

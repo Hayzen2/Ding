@@ -1,6 +1,5 @@
 package com.example.notifybank
 import android.app.Notification
-import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -18,12 +17,12 @@ class BankNotifyService : NotificationListenerService() {
     override fun onCreate() {
         super.onCreate()
 
-        val sharedPreferences = getSharedPreferences("bank_preferences", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("bank_preferences", MODE_PRIVATE)
         activeBank = sharedPreferences.getString("active_bank", null)
         soundVolume = sharedPreferences.getFloat("sound_volume", 0.5f)
         textToSpeech = TextToSpeech(applicationContext) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                textToSpeech.setLanguage(Locale("vi", "VN"))
+                textToSpeech.language = Locale("vi", "VN")
             }
         }
 
@@ -31,7 +30,7 @@ class BankNotifyService : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
-        val prefs = getSharedPreferences("bank_preferences", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("bank_preferences", MODE_PRIVATE)
 
         // Check all enabled banks
         checkACBNotification(sbn, prefs)
@@ -128,7 +127,7 @@ class BankNotifyService : NotificationListenerService() {
     private fun readAmountACB(amount: String) {
         val text = "Số tiền $amount đồng đã được chuyển vào tài khoản ngân hàng ACB"
         val params = Bundle()
-        val adjustedVolume = soundVolume * 0.7f
+        val adjustedVolume = soundVolume
         mediaPlayer?.setVolume(adjustedVolume, adjustedVolume)
         params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, soundVolume)
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, params, null)
@@ -137,7 +136,7 @@ class BankNotifyService : NotificationListenerService() {
     private fun readAmountOCB(amount: String) {
         val text = "Số tiền $amount đồng đã được chuyển vào tài khoản ngân hàng OCB"
         val params = Bundle()
-        val adjustedVolume = soundVolume * 0.7f
+        val adjustedVolume = soundVolume
         mediaPlayer?.setVolume(adjustedVolume, adjustedVolume)
         params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, soundVolume)
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, params, null)
@@ -146,7 +145,7 @@ class BankNotifyService : NotificationListenerService() {
     private fun readAmountTech(amount: String) {
         val text = "Số tiền $amount đã được chuyển vào tài khoản ngân hàng Techcombank"
         val params = Bundle()
-        val adjustedVolume = soundVolume * 0.7f
+        val adjustedVolume = soundVolume
         mediaPlayer?.setVolume(adjustedVolume, adjustedVolume)
         params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, soundVolume)
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, params, null)
@@ -155,7 +154,7 @@ class BankNotifyService : NotificationListenerService() {
     private fun readAmountVietin(amount: String) {
         val text = "Số tiền $amount đồng đã được chuyển vào tài khoản ngân hàng Vietinbank"
         val params = Bundle()
-        val adjustedVolume = soundVolume * 0.7f
+        val adjustedVolume = soundVolume
         mediaPlayer?.setVolume(adjustedVolume, adjustedVolume)
         params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, soundVolume)
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, params, null)
